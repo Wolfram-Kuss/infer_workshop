@@ -1,0 +1,37 @@
+* Was ist Typ Inferenz?
+
+Laut Wikipedia:
+
+Automatische Analyse des Typen eines Ausdrucks
+in einer Programmiersprache
+
+* Agenda
+
+- Unsere Programmiersprache & Beispielprogramme
+- Repräsentation in Kotlin (AST)
+- Abwechselnd Mob & Pair Programming
+
+* How-To
+
+1. Das Repo klonen: https://github.com/kritzcreek/infer_workshop
+2. Das geklonte Repo in IntelliJ öffnen (es sollte als Gradle Projekt
+   erkannt werden)
+3. Wenn alles geklappt hat sollte der ~Examples~ Run Task die Beispiel
+   Programme ausführen
+
+Die voreingestellten Test Konfigurationen in IntelliJ in der folgenden
+Reihenfolge gruen machen. Hierfuer sollte nur ~types/TypeChecker.kt~
+angepasst werden muessen.
+
+Alle relevanten Datentypen befinden sich in ~syntax/AST.kt~ der Rest
+der Codebase sollte nicht gelesen werden müssen. (Wer Interesse oder
+Langeweile hat darf das natürlich trotzdem tun)
+
+1. Literal & Var
+2. Let
+3. Lambda
+4. Substitution
+5. Unify
+6. Application
+7. If
+8. (Bonus) Recursive Let
