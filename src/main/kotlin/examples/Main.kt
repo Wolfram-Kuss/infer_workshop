@@ -17,7 +17,7 @@ fun main() {
     runProg("Currying 2", currying2)
     runProg("Higher order programming", higherOrder)
     runProg("Fibonacci", fib)
-    runProg("Ninety-nine Bottles", ninetyninebottles)
+//    runProg("Ninety-nine Bottles", ninetyninebottles)
 }
 
 val primInt = "1"

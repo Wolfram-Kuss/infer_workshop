@@ -41,7 +41,22 @@ class TypeChecker(var checkState: CheckState) {
     fun unify(ty1: Monotype, ty2: Monotype) {
         val ty1 = zonk(ty1)
         val ty2 = zonk(ty2)
-        throw Exception("Can't match ${ty1.pretty()} with ${ty2.pretty()}")
+
+        if (ty1 == ty2) return
+        when {
+            ty1 is Monotype.Unknown -> solveType(ty1.u, ty2)
+            ty2 is Monotype.Unknown -> solveType(ty2.u, ty1)
+            ty1 is Monotype.Function && ty2 is Monotype.Function -> {
+                unify(ty1.argument, ty2.argument)
+                unify(ty1.result, ty2.result)
+            }
+            else -> throw Exception("Can't match ${ty1.pretty()} with ${ty2.pretty()}")
+        }
+    }
+
+    private fun solveType(u: Int, ty: Monotype) {
+        if (ty.unknowns().contains(u)) throw Exception("Occurs check failed")
+        checkState.substitution.subst[u] = ty
     }
 
     private fun infer(expr: Expression): Monotype {
@@ -62,7 +77,21 @@ class TypeChecker(var checkState: CheckState) {
                 }
                 Monotype.Function(tyArg, tyRes)
             }
-            else -> TODO()
+            is Expression.App -> {
+                val tyFun = infer(expr.function)
+                val tyArg = infer(expr.argument)
+                val tyRes = freshUnknown()
+                unify(tyFun, Monotype.Function(tyArg, tyRes))
+                tyRes
+            }
+            is Expression.If -> {
+                val tyCond = infer(expr.condition)
+                unify(tyCond, Monotype.Bool)
+                val tyThen = infer(expr.thenCase)
+                val tyElse = infer(expr.elseCase)
+                unify(tyThen, tyElse)
+                tyThen
+            }
         }
     }
 
