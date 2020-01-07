@@ -4,9 +4,12 @@ import syntax.*
 import kotlin.Exception
 
 inline class Substitution(val subst: HashMap<Int, Monotype> = hashMapOf()) {
-    fun apply(ty: Monotype): Monotype {
-        // TODO
-        return ty
+    fun apply(ty: Monotype): Monotype = when (ty) {
+        is Monotype.Unknown ->
+            subst[ty.u]?.let { apply(it) } ?: ty
+        is Monotype.Function ->
+            Monotype.Function(apply(ty.argument), apply(ty.result))
+        else -> ty
     }
 
     override fun toString(): String =
