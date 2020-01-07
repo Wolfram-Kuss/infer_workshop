@@ -52,6 +52,13 @@ class TypeChecker(var checkState: CheckState) {
                 withName(expr.binder, infer(expr.expr)) {
                     infer(expr.body)
                 }
+            is Expression.Lambda -> {
+                val tyArg = freshUnknown()
+                val tyRes = withName(expr.binder, tyArg) {
+                    infer(expr.body)
+                }
+                Monotype.Function(tyArg, tyRes)
+            }
             else -> TODO()
         }
     }
