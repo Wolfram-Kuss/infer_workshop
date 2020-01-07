@@ -22,7 +22,7 @@ fun main() {
 
 val primInt = "1"
 
-val primBool = "true"
+val primBool = "false"
 
 val primString = """
     "Hello world!"
@@ -63,7 +63,7 @@ val letAndApply = """
 """
 
 val currying1 = """
-    let const = \x -> \y -> x in
+    let const = \x -> (\y -> x) in
     const 10
 """
 

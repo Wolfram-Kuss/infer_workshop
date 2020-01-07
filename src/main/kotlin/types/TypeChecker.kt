@@ -48,8 +48,20 @@ class TypeChecker(var checkState: CheckState) {
             is Expression.String -> Monotype.String
             is Expression.Var ->
                 checkState.environment[expr.name] ?: throw Exception("Unknown variable ${expr.name}")
+            is Expression.Let ->
+                withName(expr.binder, infer(expr.expr)) {
+                    infer(expr.body)
+                }
             else -> TODO()
         }
+    }
+
+    private fun <T> withName(binder: Name, ty: Monotype, action: () -> T): T {
+        val tmp = checkState.environment.clone()
+        checkState.environment[binder] = ty
+        val result = action()
+        checkState.environment = tmp
+        return result
     }
 
     fun inferExpr(expr: Expression): Monotype = zonk(infer(expr))
