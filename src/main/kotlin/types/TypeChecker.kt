@@ -42,7 +42,14 @@ class TypeChecker(var checkState: CheckState) {
     }
 
     private fun infer(expr: Expression): Monotype {
-        TODO()
+        return when (expr) {
+            is Expression.Int -> Monotype.Int
+            is Expression.Bool -> Monotype.Bool
+            is Expression.String -> Monotype.String
+            is Expression.Var ->
+                checkState.environment[expr.name] ?: throw Exception("Unknown variable ${expr.name}")
+            else -> TODO()
+        }
     }
 
     fun inferExpr(expr: Expression): Monotype = zonk(infer(expr))
