@@ -66,10 +66,14 @@ class TypeChecker(var checkState: CheckState) {
             is Expression.String -> Monotype.String
             is Expression.Var ->
                 checkState.environment[expr.name] ?: throw Exception("Unknown variable ${expr.name}")
-            is Expression.Let ->
-                withName(expr.binder, infer(expr.expr)) {
+            is Expression.Let -> {
+                val tyBinder = freshUnknown()
+                withName(expr.binder, tyBinder) {
+                    val inferredBinder = infer(expr.expr)
+                    unify(tyBinder, inferredBinder)
                     infer(expr.body)
                 }
+            }
             is Expression.Lambda -> {
                 val tyArg = freshUnknown()
                 val tyRes = withName(expr.binder, tyArg) {
